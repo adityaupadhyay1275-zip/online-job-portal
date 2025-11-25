@@ -1,123 +1,56 @@
-#frontend/src/App.js
+Group: ONYX | Presented By: Aditya Upadhyay, Dharmendre Singh, Utkarsh Shrivastav
 
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+This repository contains the full-stack scaffold and core presentation for our Unified Platform Overview — an Online Job Portal system designed to streamline the job search process for seekers and employers.
 
-// This component handles the user interface and logic for the portal
-export default function App() {
-  // State to hold the list of job openings
-  const [jobs, setJobs] = useState([]);
-  // State for the new job post form
-  const [form, setForm] = useState({ title: '', company: '', location: '', skills: '' });
+✨ Unified Platform Overview
+Our system offers a centralized platform featuring automated matching, user logins, and scalable coding architecture to deliver fast search, real listings, and tailored matches—all in one place.
 
-  // Load real listings (data from the Node.js backend) on component mount
-  useEffect(() => {
-    // Access thousands of openings from the API
-    axios.get('http://localhost:5000/api/jobs')
-      .then(res => setJobs(res.data))
-      .catch((error) => console.error("Error fetching jobs:", error));
-  }, []);
+🚀 Key Features of the Portal
+The core functionality of the system is built around these modules:
 
-  // Function to submit a new job posting
-  const submit = async (e) => {
-    e.preventDefault();
-    // Prepare the payload (skills are comma-separated in the input, must be an array for the backend)
-    const payload = { ...form, skills: form.skills.split(',').map(s => s.trim()) };
+Feature	Description	Status
+01. Job Posting	Allows employers to easily share opportunities online.	Implemented (Basic API Route)
+02. Resume Upload	Simplifies the application process for job seekers.	Planned Integration
+03. Advanced Search & Filters	Helps users find relevant jobs quickly.	Implemented (API integration)
+04. Notifications	Keeps users informed about job matches and updates.	Planned Module
+05. Profile Management	Enables users to personalize and manage their information.	Planned Module
 
-    try {
-      // Send the job posting allows employers to easily share opportunities online. [cite: 28]
-      const res = await axios.post('http://localhost:5000/api/jobs', payload);
-      // Update the list of jobs with the new posting
-      setJobs(prev => [...prev, res.data]);
-      // Reset the form after successful post
-      setForm({ title: '', company: '', location: '', skills: '' });
-    } catch (error) {
-      console.error("Error posting job:", error);
-    }
-  };
+Export to Sheets
 
-  return (
-    <div style={{ background: '#0f1724', color: '#e6eef8', minHeight: '100vh', padding: 20, fontFamily: 'Arial' }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #1f2937', paddingBottom: 10 }}>
-        <h1>ONYX Online Job Portal</h1>
-        <div>Presented by: Aditya, Dharmendre, Utkarsh [cite: 4, 5, 6]</div>
-      </header>
+🛠️ Coding Structure Overview
+The system employs a layered architecture for efficient processing and reliable data storage solutions.
 
-      <main style={{ marginTop: 20 }}>
-        {/* Job Posting Section: Key Feature 01 [cite: 27] */}
-        <section style={{ marginBottom: 40, background: '#111827', padding: 20, borderRadius: 8 }}>
-          <h2>Post a Job (Job Posting)</h2>
-          <p>Employers can easily share opportunities online[cite: 28].</p>
-          <form onSubmit={submit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 15 }}>
-            <input required placeholder='Job Title' value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} style={{ padding: 10, borderRadius: 4, border: 'none' }} />
-            <input required placeholder='Company Name' value={form.company} onChange={e => setForm({ ...form, company: e.target.value })} style={{ padding: 10, borderRadius: 4, border: 'none' }} />
-            <input placeholder='Location (e.g., Remote, Noida)' value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} style={{ padding: 10, borderRadius: 4, border: 'none' }} />
-            <input placeholder='Skills (e.g., Node.js, React, MongoDB)' value={form.skills} onChange={e => setForm({ ...form, skills: e.target.value })} style={{ padding: 10, borderRadius: 4, border: 'none' }} />
-            <button type='submit' style={{ gridColumn: '1 / -1', padding: 12, background: '#1c90f3', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}>Share Opportunity</button>
-          </form>
-        </section>
+Component	Technology Used	Purpose
+Frontend	HTML/CSS/JS (React)	Utilizes React for a robust user experience and accessibility.
+Backend	Node.js/Express (Planned: Python)	Employs Node.js for efficient processing and data handling (Basic API workflow).
+Database	Planned: MySQL/MongoDB	Integration for reliable data storage solutions.
 
-        {/* Job Openings Section: Fast search & real listings [cite: 8] */}
-        <section>
-          <h2>Job Openings (Advanced Search & Filters) [cite: 32]</h2>
-          <p>Find relevant jobs quickly[cite: 33].</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: 15, marginTop: 15 }}>
-            {jobs.map(j => (
-              <div key={j.id} style={{ padding: 15, background: '#071025', borderRadius: 8, border: '1px solid #1f2937' }}>
-                <h3>{j.title}</h3>
-                <div>**{j.company}** • {j.location}</div>
-                <div style={{ marginTop: 10, fontSize: '0.9em', color: '#ccc' }}>Skills: {j.skills?.join(', ')}</div>
-                <button style={{ marginTop: 10, padding: '8px 15px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}>Apply (Resume Upload) [cite: 30]</button>
-              </div>
-            ))}
-          </div>
-        </section>
-      </main>
-    </div>
-  );
-}
+Export to Sheets
 
+📂 Repository Contents
+Presentation - Online Job Portal.pdf: The official presentation file detailing the architecture and features.
 
+backend/: Contains the Node.js/Express server scaffold with sample API routes.
 
-#backend/server.js
+frontend/: Contains the React starter application for the user interface.
 
-const express = require('express');
-const app = express();
-const cors = require('cors');
-const bodyParser = require('body-parser');
+🏃 Quick Start (To Run the Portal)
+1. Backend Setup
+Navigate to the backend folder: cd backend
 
-app.use(cors());
-app.use(bodyParser.json());
+Install dependencies: npm install
 
-// In-memory jobs store: Replace with MySQL/MongoDB for reliable data storage 
-let jobs = [
-  { id: 1, title: 'Web Developer', company: 'Tech Solutions', location: 'Remote', skills: ['HTML', 'CSS', 'JS', 'React'] },
-  { id: 2, title: 'Data Scientist', company: 'DataCorp', location: 'Noida', skills: ['Python', 'Machine Learning', 'SQL'] }
-];
+Start the server: node server.js (Server runs on http://localhost:5000)
 
-// API Routes (Part of the Architecture Overview [cite: 23])
+2. Frontend Setup
+Navigate to the frontend folder: cd frontend
 
-// Get all jobs (Fast search, real listings [cite: 8])
-app.get('/api/jobs', (req, res) => {
-  res.json(jobs);
-});
+Install dependencies: npm install
 
-// Post a new job (Job posting key feature [cite: 28])
-app.post('/api/jobs', (req, res) => {
-  const job = { id: jobs.length + 1, ...req.body };
-  jobs.push(job);
-  res.status(201).json(job);
-});
+Start the application: npm start (App runs on http://localhost:3000)
 
-// System Health Check (API [cite: 22] status)
-app.get('/api/health', (req, res) => res.json({ status: 'API is running' }));
+Made by ONYX Group
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}. Ready for automated matching, user logins, and scalable coding architecture[cite: 12].`));
+You can now copy that entire content and paste it into your README.md file!
 
-
-
-
-
-
-
+Do you need help with anything else for your GitHub project, like setting a software license?
